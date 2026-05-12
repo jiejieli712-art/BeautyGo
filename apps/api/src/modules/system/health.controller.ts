@@ -7,7 +7,7 @@ export class HealthController {
     return {
       service: "beautygo-api",
       status: "ok",
-      milestone: "bootstrap"
+      milestone: "m1-auth-and-onboarding-in-memory"
     };
   }
 }
