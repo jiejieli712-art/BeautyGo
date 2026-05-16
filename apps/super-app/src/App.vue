@@ -8,6 +8,7 @@ import type {
 } from "@beautygo/domain-types";
 import { checkApiHealth, createArtistApplication, mockLogin } from "./api";
 import { appRoles, getPrimaryNavigation } from "./features/role-shell/navigation";
+import CustomerBookingView from "./views/CustomerBookingView.vue";
 import PortfolioView from "./views/PortfolioView.vue";
 
 type ViewMode = "demo" | "portfolio";
@@ -170,8 +171,8 @@ onMounted(async () => {
       </dl>
 
       <div v-if="viewMode === 'portfolio'" class="sidebar-footer">
-        <span>BeautyGo v0.2</span>
-        <span>Milestone 1 Complete</span>
+        <span>AI 产品经理作品集 v1.0</span>
+        <span>Milestone 3 Complete</span>
       </div>
     </aside>
 
@@ -189,15 +190,9 @@ onMounted(async () => {
           </nav>
         </div>
 
-        <div v-if="activeRole === 'customer'" class="customer-grid">
-          <article>
-            <h3>附近化妆师</h3>
-            <p>下一步会接入搜索、筛选和化妆师详情页。</p>
-          </article>
-          <article>
-            <h3>预约链路</h3>
-            <p>当前阶段先完成角色和入驻闭环，再进入搜索与下单。</p>
-          </article>
+        <div v-if="activeRole === 'customer'">
+          <CustomerBookingView v-if="sessionToken" :token="sessionToken" />
+          <p v-else class="form-result">请点击上方角色切换登录为客户</p>
         </div>
 
         <form v-else-if="activeRole === 'artist'" class="artist-form" @submit.prevent="submitArtistApplication">

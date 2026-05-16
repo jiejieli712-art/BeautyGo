@@ -24,8 +24,8 @@ const mvpOut = [
 const milestones = [
   { id: "m0", name: "M0: Bootstrap", status: "done", items: ["monorepo 骨架", "领域类型包", "角色感知壳"] },
   { id: "m1", name: "M1: Auth + Onboarding", status: "done", items: ["Mock 登录", "化妆师入驻申请", "后台审核闭环"] },
-  { id: "m2", name: "M2: Service Config", status: "next", items: ["套餐管理", "档期配置", "服务范围"] },
-  { id: "m3", name: "M3: Search & Booking", status: "planned", items: ["搜索筛选", "下单支付", "订单状态机"] },
+  { id: "m2", name: "M2: Customer Booking", status: "done", items: ["化妆师浏览", "套餐选择", "模拟预约", "API 测试"] },
+  { id: "m3", name: "M3: Search & Payment", status: "planned", items: ["搜索筛选", "支付集成", "订单状态机"] },
 ];
 
 const agents = [
@@ -45,10 +45,10 @@ const techStack = [
 ];
 
 const stats = [
-  { value: "~1500", unit: "行", label: "核心代码" },
-  { value: "2", unit: "个", label: "里程碑完成" },
-  { value: "5", unit: "个", label: "API 端点" },
-  { value: "3", unit: "个", label: "前端页面" },
+  { value: "~2500", unit: "行", label: "核心代码" },
+  { value: "3", unit: "个", label: "里程碑完成" },
+  { value: "9", unit: "个", label: "API 端点" },
+  { value: "4", unit: "个", label: "前端页面" },
 ];
 </script>
 
@@ -262,10 +262,11 @@ const stats = [
           </div>
           <div class="demo-card">
             <div class="demo-number">04</div>
-            <h3>领域类型共享</h3>
-            <p>domain-types 包定义了角色、订单状态、化妆师认证等核心业务类型，前后端共用同一套语言。</p>
+            <h3>客户浏览与预约</h3>
+            <p>客户可浏览化妆师列表、查看套餐、填写预约表单并提交。含 3 位模拟化妆师和 6 个套餐。</p>
             <div class="demo-endpoints">
-              <code>@beautygo/domain-types</code>
+              <code>GET  /api/marketplace/artists</code>
+              <code>POST /api/bookings</code>
             </div>
           </div>
         </div>
