@@ -22,9 +22,13 @@ export type ArtistApplication = {
   primaryScenes: ServiceScene[];
   portfolio: ArtistPortfolioItem[];
   submittedAt: string;
+  updatedAt: string;
   status: ArtistApplicationStatus;
   reviewerNote?: string;
+  reviewedAt?: string;
+  reviewedByUserId?: string;
   createdByRole: Extract<AppRole, "artist">;
+  createdByUserId: string;
 };
 
 export type CreateArtistApplicationInput = {
@@ -40,4 +44,9 @@ export type CreateArtistApplicationInput = {
 export type UpdateArtistApplicationStatusInput = {
   status: ArtistApplicationStatus;
   reviewerNote?: string;
+};
+
+export type ArtistApplicationListQuery = {
+  status?: ArtistApplicationStatus;
+  cityId?: string;
 };

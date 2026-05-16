@@ -1,5 +1,7 @@
 export type AppRole = "customer" | "artist" | "admin";
 
+export const appRoles = ["customer", "artist", "admin"] as const satisfies readonly AppRole[];
+
 export type AuthSession = {
   userId: string;
   role: AppRole;

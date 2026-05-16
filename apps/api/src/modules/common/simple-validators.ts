@@ -1,6 +1,14 @@
 import { BadRequestException } from "@nestjs/common";
 
-export function assertString(value: unknown, fieldName: string): string {
+type StringValidationOptions = {
+  maxLength?: number;
+};
+
+export function assertString(
+  value: unknown,
+  fieldName: string,
+  options: StringValidationOptions = {}
+): string {
   if (typeof value !== "string") {
     throw new BadRequestException(`${fieldName} must be a string`);
   }
@@ -11,18 +19,25 @@ export function assertString(value: unknown, fieldName: string): string {
     throw new BadRequestException(`${fieldName} cannot be empty`);
   }
 
+  if (options.maxLength !== undefined && normalized.length > options.maxLength) {
+    throw new BadRequestException(
+      `${fieldName} must be less than or equal to ${options.maxLength} characters`
+    );
+  }
+
   return normalized;
 }
 
 export function assertOptionalString(
   value: unknown,
-  fieldName: string
+  fieldName: string,
+  options: StringValidationOptions = {}
 ): string | undefined {
   if (value === undefined || value === null) {
     return undefined;
   }
 
-  return assertString(value, fieldName);
+  return assertString(value, fieldName, options);
 }
 
 export function assertNumber(value: unknown, fieldName: string): number {

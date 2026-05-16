@@ -100,5 +100,3 @@ export class ArtistApplicationsStore {
     return updatedApplication;
   }
 }
-
-export const artistApplicationsStore = new ArtistApplicationsStore();

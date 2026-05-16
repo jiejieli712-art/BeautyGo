@@ -1,12 +1,10 @@
-export type AppRole = "customer" | "artist" | "admin";
+import type { AppRole, LoginRequest } from "@beautygo/domain-types";
+
+export type { AppRole };
 
 export const appRoles = ["customer", "artist", "admin"] as const satisfies readonly AppRole[];
 
-export type MockLoginRequestDto = {
-  role: AppRole;
-  cityId: string;
-  displayName: string;
-};
+export type MockLoginRequestDto = LoginRequest;
 
 export type MockSession = {
   token: string;

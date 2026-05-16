@@ -25,11 +25,16 @@ import {
   type CreateArtistApplicationDto,
   type UpdateArtistApplicationStatusDto
 } from "./artist-application.types";
-import { artistApplicationsStore } from "./artist-applications.store";
-import { mockSessionStore } from "../auth/mock-session.store";
+import { ArtistApplicationsStore } from "./artist-applications.store";
+import { MockSessionStore } from "../auth/mock-session.store";
 
 @Controller("artist-applications")
 export class ArtistApplicationsController {
+  constructor(
+    private readonly artistApplicationsStore: ArtistApplicationsStore,
+    private readonly mockSessionStore: MockSessionStore
+  ) {}
+
   @Post()
   createApplication(
     @Body() body: CreateArtistApplicationDto,
@@ -37,7 +42,7 @@ export class ArtistApplicationsController {
     @Headers("x-mock-session-token") xMockSessionToken?: string,
     @Headers("x-session-token") xSessionToken?: string
   ) {
-    const session = mockSessionStore.requireSession({
+    const session = this.mockSessionStore.requireSession({
       authorization,
       xMockSessionToken,
       xSessionToken
@@ -46,7 +51,7 @@ export class ArtistApplicationsController {
     this.ensureArtistAccess(session.role, "create artist application");
     const input = this.parseCreateApplication(body);
 
-    return artistApplicationsStore.createApplication(input, session);
+    return this.artistApplicationsStore.createApplication(input, session);
   }
 
   @Get()
@@ -56,7 +61,7 @@ export class ArtistApplicationsController {
     @Headers("x-mock-session-token") xMockSessionToken?: string,
     @Headers("x-session-token") xSessionToken?: string
   ) {
-    const session = mockSessionStore.requireSession({
+    const session = this.mockSessionStore.requireSession({
       authorization,
       xMockSessionToken,
       xSessionToken
@@ -64,7 +69,7 @@ export class ArtistApplicationsController {
 
     this.ensureArtistAccess(session.role, "list artist applications");
     const parsedQuery = this.parseListQuery(query);
-    const items = artistApplicationsStore.listApplications(session, parsedQuery);
+    const items = this.artistApplicationsStore.listApplications(session, parsedQuery);
 
     return {
       items,
@@ -79,14 +84,14 @@ export class ArtistApplicationsController {
     @Headers("x-mock-session-token") xMockSessionToken?: string,
     @Headers("x-session-token") xSessionToken?: string
   ) {
-    const session = mockSessionStore.requireSession({
+    const session = this.mockSessionStore.requireSession({
       authorization,
       xMockSessionToken,
       xSessionToken
     });
 
     this.ensureArtistAccess(session.role, "read artist application");
-    return artistApplicationsStore.getApplicationById(assertString(id, "id"), session);
+    return this.artistApplicationsStore.getApplicationById(assertString(id, "id"), session);
   }
 
   @Patch(":id/status")
@@ -97,7 +102,7 @@ export class ArtistApplicationsController {
     @Headers("x-mock-session-token") xMockSessionToken?: string,
     @Headers("x-session-token") xSessionToken?: string
   ) {
-    const session = mockSessionStore.requireSession({
+    const session = this.mockSessionStore.requireSession({
       authorization,
       xMockSessionToken,
       xSessionToken
@@ -106,7 +111,7 @@ export class ArtistApplicationsController {
     this.ensureAdminAccess(session.role, "update artist application status");
     const input = this.parseUpdateStatus(body);
 
-    return artistApplicationsStore.updateStatus(assertString(id, "id"), input, session);
+    return this.artistApplicationsStore.updateStatus(assertString(id, "id"), input, session);
   }
 
   private parseCreateApplication(body: CreateArtistApplicationDto): CreateArtistApplicationDto {
@@ -118,8 +123,10 @@ export class ArtistApplicationsController {
       const scene = assertOneOf(item.scene, `portfolio[${index}].scene`, serviceScenes);
 
       return {
-        id: assertString(item.id, `portfolio[${index}].id`),
-        imageUrl: assertString(item.imageUrl, `portfolio[${index}].imageUrl`),
+        id: assertString(item.id, `portfolio[${index}].id`, { maxLength: 80 }),
+        imageUrl: assertString(item.imageUrl, `portfolio[${index}].imageUrl`, {
+          maxLength: 500
+        }),
         scene
       };
     });
@@ -129,10 +136,10 @@ export class ArtistApplicationsController {
     );
 
     return {
-      applicantName: assertString(body.applicantName, "applicantName"),
-      cityId: assertString(body.cityId, "cityId"),
-      phone: assertString(body.phone, "phone"),
-      bio: assertString(body.bio, "bio"),
+      applicantName: assertString(body.applicantName, "applicantName", { maxLength: 40 }),
+      cityId: assertString(body.cityId, "cityId", { maxLength: 64 }),
+      phone: assertString(body.phone, "phone", { maxLength: 30 }),
+      bio: assertString(body.bio, "bio", { maxLength: 600 }),
       experienceYears: assertInteger(body.experienceYears, "experienceYears", {
         min: 0
       }),
@@ -147,14 +154,14 @@ export class ArtistApplicationsController {
         query.status === undefined
           ? undefined
           : assertOneOf(query.status, "status", artistApplicationStatuses),
-      cityId: assertOptionalString(query.cityId, "cityId")
+      cityId: assertOptionalString(query.cityId, "cityId", { maxLength: 64 })
     };
   }
 
   private parseUpdateStatus(body: UpdateArtistApplicationStatusDto): UpdateArtistApplicationStatusDto {
     return {
       status: assertOneOf(body.status, "status", artistApplicationStatuses),
-      reviewerNote: assertOptionalString(body.reviewerNote, "reviewerNote")
+      reviewerNote: assertOptionalString(body.reviewerNote, "reviewerNote", { maxLength: 300 })
     };
   }
 

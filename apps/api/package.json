@@ -2,6 +2,7 @@
   "name": "@beautygo/api",
   "private": true,
   "dependencies": {
+    "@beautygo/domain-types": "workspace:*",
     "@nestjs/common": "^11.1.6",
     "@nestjs/core": "^11.1.6",
     "@nestjs/platform-express": "^11.1.6",
@@ -10,9 +11,10 @@
   },
   "scripts": {
     "dev": "tsx watch src/main.ts",
-    "start": "node dist/main.js",
+    "start": "node dist/apps/api/src/main.js",
     "build": "tsc --project tsconfig.json",
-    "typecheck": "tsc --project tsconfig.json --noEmit"
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "test": "tsx --test \"src/**/*.test.ts\""
   },
   "devDependencies": {
     "@types/node": "^24.5.2",
