@@ -75,6 +75,14 @@ export class ArtistApplicationsStore {
     return application;
   }
 
+  countAll(): number {
+    return this.applications.size;
+  }
+
+  countByStatus(status: ArtistApplicationStatus): number {
+    return Array.from(this.applications.values()).filter((a) => a.status === status).length;
+  }
+
   updateStatus(
     id: string,
     input: UpdateArtistApplicationStatusDto,

@@ -52,6 +52,47 @@ export async function listArtistApplications(token: string): Promise<ArtistAppli
   return response.json() as Promise<ArtistApplicationListResponse>;
 }
 
+export type DashboardSummary = {
+  project: {
+    name: string;
+    positioning: string;
+    milestone: string;
+    demoLines: string[];
+  };
+  supply: {
+    totalApplications: number;
+    pending: number;
+    trial: number;
+    approved: number;
+    rejected: number;
+  };
+  demand: {
+    totalBookings: number;
+    created: number;
+    confirmed: number;
+    cancelled: number;
+    artistCount: number;
+    packageCount: number;
+    sceneCount: number;
+  };
+  portfolio: {
+    docsReady: boolean;
+    aiCollaborationVisible: boolean;
+    runnableMvp: boolean;
+    testStatus: string;
+  };
+};
+
+export async function fetchDashboardSummary(): Promise<DashboardSummary> {
+  const response = await fetch(`${API_BASE_URL}/dashboard/summary`);
+
+  if (!response.ok) {
+    throw new Error(`Dashboard fetch failed: ${response.status}`);
+  }
+
+  return response.json() as Promise<DashboardSummary>;
+}
+
 export async function updateArtistApplicationStatus(
   token: string,
   id: string,

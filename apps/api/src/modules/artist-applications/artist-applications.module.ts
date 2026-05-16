@@ -6,6 +6,7 @@ import { ArtistApplicationsStore } from "./artist-applications.store";
 @Module({
   imports: [AuthModule],
   controllers: [ArtistApplicationsController],
-  providers: [ArtistApplicationsStore]
+  providers: [ArtistApplicationsStore],
+  exports: [ArtistApplicationsStore]
 })
 export class ArtistApplicationsModule {}

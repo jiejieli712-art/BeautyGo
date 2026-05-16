@@ -47,8 +47,8 @@ const techStack = [
 const stats = [
   { value: "~2500", unit: "行", label: "核心代码" },
   { value: "3", unit: "个", label: "里程碑完成" },
-  { value: "9", unit: "个", label: "API 端点" },
-  { value: "4", unit: "个", label: "前端页面" },
+  { value: "10", unit: "个", label: "API 端点" },
+  { value: "5", unit: "个", label: "前端页面" },
 ];
 </script>
 

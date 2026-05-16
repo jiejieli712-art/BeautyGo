@@ -41,6 +41,14 @@ export class BookingsStore {
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }
 
+  countAll(): number {
+    return this.bookings.size;
+  }
+
+  countByStatus(status: BookingRecord["status"]): number {
+    return Array.from(this.bookings.values()).filter((b) => b.status === status).length;
+  }
+
   getBookingById(id: string, session: MockSession): BookingRecord {
     const booking = this.bookings.get(id);
 
