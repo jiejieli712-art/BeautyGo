@@ -8,8 +8,12 @@ import type {
 } from "@beautygo/domain-types";
 import { checkApiHealth, createArtistApplication, mockLogin } from "./api";
 import { appRoles, getPrimaryNavigation } from "./features/role-shell/navigation";
+import PortfolioView from "./views/PortfolioView.vue";
+
+type ViewMode = "demo" | "portfolio";
 
 const activeRole = ref<AppRole>(appRoles.customer);
+const viewMode = ref<ViewMode>("portfolio");
 const navigation = computed(() => getPrimaryNavigation(activeRole.value));
 const apiStatus = ref("checking");
 const sessionToken = ref("");
@@ -125,7 +129,24 @@ onMounted(async () => {
         </select>
       </label>
 
-      <div class="role-switcher">
+      <div class="view-switcher">
+        <button
+          class="view-button"
+          :class="{ active: viewMode === 'portfolio' }"
+          @click="viewMode = 'portfolio'"
+        >
+          作品集概览
+        </button>
+        <button
+          class="view-button"
+          :class="{ active: viewMode === 'demo' }"
+          @click="viewMode = 'demo'"
+        >
+          功能演示
+        </button>
+      </div>
+
+      <div v-if="viewMode === 'demo'" class="role-switcher">
         <button
           v-for="role in Object.values(appRoles)"
           :key="role"
@@ -137,7 +158,7 @@ onMounted(async () => {
         </button>
       </div>
 
-      <dl class="status-list">
+      <dl v-if="viewMode === 'demo'" class="status-list">
         <div>
           <dt>API</dt>
           <dd>{{ apiStatus }}</dd>
@@ -147,10 +168,17 @@ onMounted(async () => {
           <dd>{{ sessionLabel }}</dd>
         </div>
       </dl>
+
+      <div v-if="viewMode === 'portfolio'" class="sidebar-footer">
+        <span>BeautyGo v0.2</span>
+        <span>Milestone 1 Complete</span>
+      </div>
     </aside>
 
     <main class="workspace">
-      <section class="panel">
+      <PortfolioView v-if="viewMode === 'portfolio'" />
+
+      <section v-else class="panel">
         <div class="panel-heading">
           <div>
             <span class="eyebrow">当前角色</span>
@@ -278,6 +306,28 @@ textarea {
   font: inherit;
 }
 
+.view-switcher {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.view-button {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.view-button.active {
+  background: #8cc7b3;
+  color: #16221f;
+}
+
 .role-switcher {
   display: grid;
   gap: 10px;
@@ -312,6 +362,17 @@ dt {
 
 dd {
   margin: 4px 0 0;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+  color: #8cc7b3;
 }
 
 .workspace {
